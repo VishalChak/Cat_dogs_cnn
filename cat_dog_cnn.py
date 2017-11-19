@@ -6,7 +6,6 @@ Created on Sat Nov 18 23:32:24 2017
 @author: vishal
 """
 
-
 files_path = '/home/vishal/ML/datasets/Cat_Dog/'
 
 import cv2
@@ -41,6 +40,7 @@ def create_label(image_name):
 
 def create_train_data():
     training_data = []
+    
     for img in tqdm(os.listdir(TRAIN_DIR)):
         path = os.path.join(TRAIN_DIR, img)
         img_data = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
