@@ -44,7 +44,7 @@ def create_label(image_name):
 def create_train_data():
     training_data = []
     try:
-        training_data = np.load('train_data1.npy')
+        training_data = np.load('train_data.npy')
     except IOError:
         for img in tqdm(os.listdir(TRAIN_DIR)):
             path = os.path.join(TRAIN_DIR, img)
@@ -68,7 +68,7 @@ def create_test_data():
             img_data = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
             img_data = cv2.resize(img_data, (IMG_SIZE, IMG_SIZE))
             testing_data.append([np.array(img_data), IMG_NUM])
-        shuffle(testing_data)
+        #shuffle(testing_data)
         np.save('testing.npy',testing_data)
         return testing_data
     else:
@@ -147,16 +147,17 @@ def create_model_bigger():
     return model_big
     
 model = create_model()
+
 model_bigger = create_model_bigger()
 
 
 test_data = create_test_data()
 
-d = test_data[6]
+d = test_data[378]
 img_data, img_num = d
 
 data = img_data.reshape(IMG_SIZE, IMG_SIZE, 1)
-prediction = model.predict([data])[0]
+prediction = model_bigger.predict([data])[0]
 
 fig = plt.figure(figsize=(6, 6))
 ax = fig.add_subplot(111)
@@ -166,14 +167,13 @@ print(f"cat: {prediction[0]}, dog: {prediction[1]}")
 
 
 fig=plt.figure(figsize=(10, 10))
-for num, data in enumerate(test_data[:20]):
-    print(num)
+for num, data in enumerate(test_data[:16]):
     img_num = data[1]
     img_data = data[0]
     y = fig.add_subplot(4, 4, num+1)
     orig = img_data
     data = img_data.reshape(IMG_SIZE, IMG_SIZE, 1)
-    model_out = model.predict([data])[0]
+    model_out = model_bigger.predict([data])[0]
     if np.argmax(model_out) == 1: 
         str_label='Dog'
     else:
@@ -183,4 +183,3 @@ for num, data in enumerate(test_data[:20]):
     y.axes.get_xaxis().set_visible(False)
     y.axes.get_yaxis().set_visible(False)
 plt.show()
-
